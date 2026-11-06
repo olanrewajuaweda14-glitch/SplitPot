@@ -1,0 +1,4 @@
+@page { margin: 16mm; }
+.testbar, .nav, footer, #judge, .toasts, .no-print, .skip { display: none !important; }
+body { background: #fff; } .doc { box-shadow: none; border: 1px solid #000; } .receipt__stamp { opacity: .8; }
+main { min-height: 0; }

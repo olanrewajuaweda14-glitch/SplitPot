@@ -1,0 +1,20 @@
+import { h, icon, act, toast, confirmDialog } from '../ui.js';
+import { api } from '../api.js';
+import { mountNetwork } from '../bg.js';
+export const title = 'Judge demo';
+export async function mount({ main, navigate, config }) {
+  const stage = h('section', { class: 'stage page-stage' }); const net = mountNetwork(stage, { seed: 17, nodes: 20, particles: 5 });
+  const box = h('div', { class: 'wrap page' }); stage.append(box); main.append(stage);
+  if (!config.demoMode) { box.append(h('h1', {}, 'Judge Mode is off'), h('p', {}, 'Start the server with DEMO_MODE=true.')); return () => net.destroy(); }
+  const STAGES = [['created', 'Just created', 'Team has not confirmed yet'], ['ready', 'Ready to fund', 'Everyone confirmed; client has not paid'], ['funded', 'Funded', 'Pot is full, nothing delivered'], ['delivered', 'Delivered', 'Milestone 1 in its 72-hour window'], ['disputed', 'Disputed', 'Milestone 1 frozen, milestone 2 untouched']];
+  const go = async (btn, stage, role) => { const r = await act(btn, () => api('POST', '/api/demo/stage', { stage })); if (r) navigate(r.links[role] ?? r.links.lead); };
+  box.append(h('p', { class: 'eyebrow' }, 'Judge demo'), h('h1', { class: 'ptitle' }, 'Skip to any moment'), h('p', { class: 'hero__lede', style: { opacity: 1, animation: 'none' } }, 'These buttons run the real engine on a seeded project marked SYNTHETIC DEMO DATA. Nothing is faked in the screens: each jump is a real sequence of commands, signed webhook included.'),
+    h('div', { class: 'stagegrid' }, ...STAGES.map(([k, t, sub]) => { const b = h('button', { class: 'btn btn--line-dark stagebtn', type: 'button' }, h('strong', {}, t), h('span', {}, sub)); b.onclick = () => go(b, k, k === 'delivered' || k === 'funded' ? 'client' : 'lead'); return b; })),
+    h('p', { class: 'hint', style: { marginTop: '22px' } }, 'A floating Judge panel on every page lets you fast-forward 72 hours, tamper with the ledger, and make a payout fail.'));
+
+  const WALK = [['Watch the opener and the hero pot', '/', null, 'Fund, Dispute and Approve on the illustrated pot (labelled illustration).'], ['Create a split yourself', '/new', null, 'Six steps with live totals. Try the ₦500,000 five-person scenario.'], ['See a split waiting on confirmations', null, ['created', 'lead'], 'Invitation states: invited, viewed, accepted, declined.'], ['Client pays once', null, ['ready', 'client'], 'Simulated checkout; the amount is verified before the pot counts.'], ['A funded pot', null, ['funded', 'lead'], 'Nothing is delivered yet; every share is visible to the team.'], ['Approve and release', null, ['delivered', 'client'], 'The 72-hour window, then one payout per person.'], ['Open the payout centre', '/payouts', null, 'Needs an account. Log in, then use "Add the demo project to my dashboard".'], ['Dispute one milestone', null, ['disputed', 'lead'], 'Only milestone 1 freezes; milestone 2 keeps moving.'], ['Verify, tamper, restore the ledger', null, ['disputed', 'ledger'], 'Chain verified, then Judge Mode tamper shows where it breaks.']];
+  const reset = h('button', { class: 'btn btn--amber', type: 'button', 'data-demo-reset': '' }, 'Reset the demo to the start');
+  reset.onclick = async () => { if (!(await confirmDialog({ title: 'Reset the demo?', body: 'This replaces the seeded demo project with a fresh one. Projects you created yourself are not touched.', confirmLabel: 'Reset the demo' }))) return; const r = await act(reset, () => api('POST', '/api/demo/stage', { stage: 'created', fresh: true }), { ok: 'Demo reset. Starting from a fresh project.' }); if (r) navigate(r.links.lead); };
+  box.append(h('h2', { class: 'mini-h', style: { marginTop: '40px', color: 'var(--on-dark)' } }, 'Guided demo, nine steps'), h('ol', { class: 'walk' }, ...WALK.map(([t, href, st, sub]) => { const b = h('button', { class: 'btn btn--line-dark btn--sm', type: 'button' }, 'Go'); b.onclick = () => (st ? go(b, st[0], st[1]) : navigate(href)); return h('li', {}, h('div', {}, h('strong', {}, t), h('span', {}, sub)), b); })), h('div', { class: 'btnrow', style: { marginTop: '18px' } }, reset));
+  return () => net.destroy();
+}

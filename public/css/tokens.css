@@ -1,0 +1,47 @@
+/* SplitPot design tokens.
+   Palette: bottle-green ink, warm paper, amber (waiting), leaf green (paid), frost blue (frozen).
+   Brick red is used ONLY for failure, always with a written label.
+   The "-lt" tints exist because the three status colours must stay legible on the dark stage. */
+
+:root {
+  --ink: #0E2A23;
+  --ink-deep: #091D18;
+  --ink-2: #143A31;
+  --ink-3: #1D4D41;
+  --page: #F3F6F3;
+  --paper: #FBFBF8;
+
+  --waiting: #E9A23B;
+  --paid: #1F7A5A;
+  --frozen: #2F6F94;
+  --fail: #B3412E;
+
+  --waiting-lt: #F4C06F;
+  --paid-lt: #5CCB9F;
+  --frozen-lt: #8CC0E0;
+  --fail-lt: #EE9A86;
+
+  --text: #0E2A23;
+  --muted: #4A6159;
+  --on-dark: #F3F6F3;
+  --on-dark-muted: #A9BDB5;
+  --rule: rgba(14, 42, 35, 0.16);
+  --rule-strong: rgba(14, 42, 35, 0.34);
+  --rule-dark: rgba(243, 246, 243, 0.16);
+
+  --display: 'Bricolage Grotesque', 'Avenir Next Condensed', 'Avenir Next', 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  --gutter: 16px;
+  --maxw: 1180px;
+  --radius: 4px;
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --testbar-h: 34px;
+  --nav-h: 64px;
+}
+
+@media (min-width: 720px) {
+  :root { --gutter: 32px; }
+}

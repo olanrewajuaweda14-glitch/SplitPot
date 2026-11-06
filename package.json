@@ -1,0 +1,22 @@
+{
+  "name": "splitpot",
+  "version": "0.1.0",
+  "description": "SplitPot: one payment, everyone paid. Prototype in test mode. No real money moves.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-reporter=spec \"tests/**/*.test.js\"",
+    "browsers:install": "npx playwright install chromium firefox webkit",
+    "check:browser": "node scripts/browser-checks/run-all.js",
+    "check:browser:all": "node scripts/browser-checks/run-all.js --browser=all",
+    "check:crawl": "node scripts/browser-checks/run-all.js --crawl"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}
